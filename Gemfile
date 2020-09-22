@@ -5,8 +5,6 @@ ruby '2.6.5'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.0.3'
-# Use sqlite3 as the database for Active Record
-gem 'sqlite3', '~> 1.4'
 # Use Puma as the app server
 gem 'puma', '~> 4.1'
 # Use SCSS for stylesheets
@@ -56,7 +54,9 @@ gem 'active_hash', '~> 2.3.0'
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'carrierwave'
 gem 'devise'
+gem 'dotenv-rails'
 gem 'foreman'
+gem 'mysql2'
 gem 'pagy'
 gem 'rack-cors'
 gem 'ransack'

@@ -98,6 +98,10 @@ GEM
       responders
       warden (~> 1.2.3)
     diffy (3.4.0)
+    dotenv (2.7.5)
+    dotenv-rails (2.7.5)
+      dotenv (= 2.7.5)
+      railties (>= 3.2, < 6.1)
     erubi (1.9.0)
     ffi (1.13.1)
     foreman (0.87.1)
@@ -128,6 +132,7 @@ GEM
     mini_portile2 (2.4.0)
     minitest (5.14.2)
     msgpack (1.3.3)
+    mysql2 (0.5.2)
     nio4r (2.5.4)
     nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
@@ -214,7 +219,6 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    sqlite3 (1.4.2)
     thor (1.0.1)
     thread_safe (0.3.6)
     tilt (2.0.10)
@@ -256,9 +260,11 @@ DEPENDENCIES
   capybara (>= 2.15)
   carrierwave
   devise
+  dotenv-rails
   foreman
   jbuilder (~> 2.7)
   listen (~> 3.2)
+  mysql2
   pagy
   puma (~> 4.1)
   rack-cors
@@ -269,7 +275,6 @@ DEPENDENCIES
   selenium-webdriver
   spring
   spring-watcher-listen (~> 2.0.0)
-  sqlite3 (~> 1.4)
   turbolinks (~> 5)
   tzinfo-data
   web-console (>= 3.3.0)
