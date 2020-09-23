@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 import ComicList from "@/components/Comics/ComicList";
 import ComicModal from "@/components/Comics/ComicModal";
+import LoginModal from "@/components/Shared/LoginModal";
 
 const CheckBox = styled.div`
   #green.custom-control-input:checked ~ .custom-control-label::before {
@@ -160,6 +161,7 @@ const Home = () => {
   const [comics, setComics] = useState([])
   const [query, setQuery] = useState("")
   const [modalDisplayed, setModalDisplayed] = useState(false)
+  const [loginDisplayed, setLoginDisplayed] = useState(false)
   const [editingComic, setEditingComic] = useState({})
 
   useEffect(() => {
@@ -220,13 +222,25 @@ const Home = () => {
   }
 
   const onComicItemActivated = (comic) => {
-    setModalDisplayed(true);
-    setEditingComic(comic);
+    const loggedIn = window.localStorage.getItem("my-comics-login");
+
+    if (loggedIn) {
+      setModalDisplayed(true);
+      setEditingComic(comic);
+    } else {
+      setLoginDisplayed(true);
+    }
   }
 
   const onCreateNewComic = () => {
-    setModalDisplayed(true);
-    setEditingComic({});
+    const loggedIn = window.localStorage.getItem("my-comics-login");
+
+    if (loggedIn) {
+      setModalDisplayed(true);
+      setEditingComic({});
+    } else {
+      setLoginDisplayed(true);
+    }
   }
 
   return (
@@ -268,6 +282,10 @@ const Home = () => {
 
       {modalDisplayed &&
         <ComicModal comic={editingComic} onClose={() => setModalDisplayed(false)}></ComicModal>
+      }
+
+      {loginDisplayed &&
+        <LoginModal onClose={() => setLoginDisplayed(false)}></LoginModal>
       }
     </Fragment>
   )
