@@ -1,8 +1,25 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+
+const AuthorLink = styled.div`
+  font-size: 80%;
+  font-weight: 400;
+  text-transform: uppercase;
+
+  a {
+    color: #131c2e;
+  }
+
+  a:not(:last-child) {
+    &:after {
+      content: ", "; 
+    }
+  }
+`
 
 const ComicItem = (props) => {
   const comic = props.comic;
-  const filterByAuthor = props.filterByAuthor;
   const activate = props.activate;
 
   const year = () => {
@@ -44,7 +61,11 @@ const ComicItem = (props) => {
           <div className="name">
             <div className="title">{comic.title}</div>
             <div className="small text-uppercase text-secondary">{comic.copyright_title}</div>
-            <div className="small text-uppercase" onClick={() => filterByAuthor(comic.author)}>{comic.author}</div>
+            <AuthorLink>
+              {comic.author.split(",").map((item, index) => (
+                <Link key={index} to={"/author/" + item.trim()}>{item.trim()}</Link>
+              ))}
+            </AuthorLink>
           </div>
         </div>
       </div>

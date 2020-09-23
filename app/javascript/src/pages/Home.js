@@ -3,7 +3,7 @@ import axios from "axios";
 import qs from "qs";
 import styled from "styled-components";
 
-import ComicItem from "@/components/Comics/ComicItem";
+import ComicList from "@/components/Comics/ComicList";
 import ComicModal from "@/components/Comics/ComicModal";
 
 const CheckBox = styled.div`
@@ -134,7 +134,6 @@ const AddButton = styled.div`
       filter: blur(1px);
     }
   }
-
 `
 
 const SearchInput = styled.div`
@@ -220,18 +219,6 @@ const Home = () => {
     }).catch(error => alert(error.message));
   }
 
-  const filterByAuthor = (authorName) => {
-    setQuery("");
-
-    const q = {
-      author_i_cont: authorName
-    };
-
-    fetchComics(q).then(response => {
-      setComics(response.data);
-    }).catch(error => console.log(error));
-  }
-
   const onComicItemActivated = (comic) => {
     setModalDisplayed(true);
     setEditingComic(comic);
@@ -241,17 +228,6 @@ const Home = () => {
     setModalDisplayed(true);
     setEditingComic({});
   }
-
-  const list = comics.map(item => {
-    return (
-      <ComicItem
-        key={item.id}
-        comic={item}
-        activate={onComicItemActivated}
-        filterByAuthor={filterByAuthor}>
-      </ComicItem>
-    )
-  })
 
   return (
     <Fragment>
@@ -288,9 +264,7 @@ const Home = () => {
         </AddButton>
       </div>
 
-      <ul className="d-flex flex-wrap p-0 justify-content-center mb-5">
-        {list}
-      </ul>
+      <ComicList list={comics} onComicItemActivated={onComicItemActivated}></ComicList>
 
       {modalDisplayed &&
         <ComicModal comic={editingComic} onClose={() => setModalDisplayed(false)}></ComicModal>
