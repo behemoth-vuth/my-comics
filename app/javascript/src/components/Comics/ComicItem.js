@@ -54,10 +54,10 @@ const ComicItem = (props) => {
         </div>
 
         <div className="detail">
-          <div className="publisher">
+          <Link className="publisher" to={"/publisher/" + comic.publisher_id}>
             <img src={comic.publisher?.attributes.logo} />
             <span>{year()}</span>
-          </div>
+          </Link>
           <div className="name">
             <div className="title">{comic.title}</div>
             <div className="small text-uppercase text-secondary">{comic.copyright_title}</div>
