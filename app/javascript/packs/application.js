@@ -9,6 +9,7 @@ import Home from "@/pages/Home";
 import ComicDetail from "@/pages/Comics/ComicDetail";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
+import "bootstrap/dist/css/bootstrap.min.css";
 import "../stylesheets/styles.scss";
 
 document.addEventListener('DOMContentLoaded', () => {
