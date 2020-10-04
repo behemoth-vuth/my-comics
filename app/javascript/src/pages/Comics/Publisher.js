@@ -5,7 +5,7 @@ import qs from "qs";
 import ComicList from "@/components/Comics/ComicList";
 import ComicModal from "@/components/Comics/ComicModal";
 
-const Author = (props) => {
+const Publisher = (props) => {
   const [comics, setComics] = useState([])
   const [publisher, setPublisher] = useState({})
   const [modalDisplayed, setModalDisplayed] = useState(false)
@@ -50,4 +50,4 @@ const Author = (props) => {
   )
 }
 
-export default Author;
+export default Publisher;
