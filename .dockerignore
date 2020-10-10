@@ -1,0 +1,7 @@
+
+.bundle
+docker
+node_modules
+public/packs
+public/assets
+public/uploads

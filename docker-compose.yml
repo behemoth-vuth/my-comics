@@ -1,0 +1,58 @@
+version: "3.8"
+services:
+  db:
+    # image: bitnami/mysql:5.7
+    # volumes:
+    #   # - ./docker/comics.sql:/docker-entrypoint-initdb.d/comics.sql
+    #   - ./docker/mysql:/bitnami/mysql/data
+    # environment:
+    #   MARIADB_CHARACTER_SET: utf8mb4
+    #   MARIADB_COLLATE: utf8mb4_unicode_ci
+    #   ALLOW_EMPTY_PASSWORD: "yes"
+    #   MYSQL_DATABASE: ${DB_DATABASE}
+    #   MYSQL_USER: ${DB_USERNAME}
+    #   MYSQL_PASSWORD: ${DB_PASSWORD}
+    #   MYSQL_AUTHENTICATION_PLUGIN: mysql_native_password
+    image: mysql:5.7
+    volumes:
+      - ./docker/mysql:/var/lib/mysql
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "true"
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3306:3306"
+    restart: on-failure
+    networks:
+      - default
+
+  comics-web:
+    depends_on:
+      - db
+    build: ./
+    ports:
+      - "3000:3000"
+    environment:
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      DB_HOST: db
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    restart: on-failure
+    networks:
+      - default
+      - media-box_default
+  # nginx:
+  #   depends_on:
+  #     - web
+  #   build:
+  #     context: ./docker/nginx
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "80:80"
+  #   restart: on-failure
+
+networks:
+  media-box_default:
+    external: true
