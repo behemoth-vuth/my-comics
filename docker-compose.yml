@@ -32,7 +32,7 @@ services:
       - db
     build: ./
     volumes:
-      - ./:/usr/src/app
+      - ./public/uploads:/usr/src/app/public/uploads
     ports:
       - "3000:3000"
     environment:
