@@ -43,6 +43,7 @@ services:
     networks:
       - default
       - media-box_default
+
   # nginx:
   #   depends_on:
   #     - web
