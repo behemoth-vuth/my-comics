@@ -25,7 +25,7 @@ services:
       - "3306:3306"
     restart: on-failure
     networks:
-      - my-comics_default
+      - default
 
   web:
     depends_on:
@@ -41,7 +41,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
     restart: on-failure
     networks:
-      - my-comics_default
+      - default
       - media-box_default
   # nginx:
   #   depends_on:
