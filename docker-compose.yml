@@ -24,6 +24,9 @@ services:
     ports:
       - "3306:3306"
     restart: on-failure
+    networks:
+      - my-comics_default
+
   web:
     depends_on:
       - db
@@ -37,6 +40,9 @@ services:
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
     restart: on-failure
+    networks:
+      - my-comics_default
+      - media-box_default
   # nginx:
   #   depends_on:
   #     - web
@@ -46,3 +52,7 @@ services:
   #   ports:
   #     - "80:80"
   #   restart: on-failure
+
+networks:
+  media-box_default:
+    external: true
