@@ -1,6 +1,4 @@
 import React, { useState, useEffect, Fragment } from "react";
-import axios from "axios";
-import { serialize } from "object-to-formdata";
 
 const LoginModal = (props) => {
   const onClose = props.onClose;
