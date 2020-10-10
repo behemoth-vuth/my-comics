@@ -38,6 +38,5 @@ openssl rand -hex 64
 
 To make a new entry in config/secrets.yml you can use the following Rake command to get a new key base:
 ```
-$ rake secret
-c975f1417b60097ecfc17e308f0d8fc502f1e2534b14ef41527d703923db9e875ad4eeb779a74c732bb6c5747c3b56d84fe7f38554089522a2f557c587766fcc
+rake secret
 ```
