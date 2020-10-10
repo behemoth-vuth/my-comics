@@ -27,7 +27,7 @@ services:
     networks:
       - default
 
-  web:
+  comics-frontend:
     depends_on:
       - db
     build: ./
