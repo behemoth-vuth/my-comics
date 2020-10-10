@@ -5,11 +5,25 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&display=swap">
+
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0" />
     <link rel="icon" href="/superhero.png">
+
+
+    <style>
+      body {
+        background-color: #131c2e;
+      }
+
+      * {
+        font-family: "Barlow", sans-serif;
+      }
+    </style>
   </head>
 
   <body>
