@@ -1,3 +1,6 @@
 class PagesController < ApplicationController
-  def index; end
+  def index
+    format.html
+    format.jpeg
+  end
 end
