@@ -8,4 +8,5 @@ class Publisher < ActiveHash::Base
   add id: 5, name: 'AMAK', logo: '/images/publishers/amak.png'
   add id: 6, name: 'NXB Thanh Niên', logo: '/images/publishers/thanh_nien.png'
   add id: 7, name: 'IMP', logo: '/images/publishers/ipm.png'
+  add id: 8, name: 'SkyComics', logo: '/images/publishers/skybooks.png'
 end

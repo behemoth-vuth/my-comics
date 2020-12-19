@@ -108,7 +108,7 @@ const ComicModal = (props) => {
               </div>
               <div className="form-group">
                 <label>Publisher</label>
-                <select className="form-control" required defaultValue={data.publisher_id} onChange={(event) => setData({ ...data, publisher_id: event.target.value })} >
+                <select className="form-control" required value={data.publisher_id} onChange={(event) => setData({ ...data, publisher_id: event.target.value })} >
                   {publishers.map(item => (
                     <option key={item.id} value={item.id}>{item.name}</option>
                   ))}
