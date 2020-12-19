@@ -4,6 +4,7 @@ module Api
 
     def index
       comics = Comic.all.order(updated_at: :desc).ransack(params[:q]).result
+      comics = comics.where('volumes_collected = volumes_total') if params[:q][:finished]
       render json: comics,
              each_serializer: ::ComicSerializer,
              include: [:publisher]

@@ -185,13 +185,13 @@ const Home = () => {
       case 1:
         conditions = {
           title_or_copyright_title_or_author_i_cont: query,
-          finished_eq: true,
+          ongoing_eq: false,
+          finished: true,
         };
         break;
       case 2:
         conditions = {
           title_or_copyright_title_or_author_i_cont: query,
-          finished_eq: false,
           ongoing_eq: false,
           volumes_collected_gt: 0,
         };

@@ -164,7 +164,7 @@ const ComicItem = (props) => {
   }
 
   const status = () => {
-    if (comic.finished) return "green";
+    if (!comic.ongoing && comic.volumes_collected === comic.volumes_total) return "green";
     if (comic.volumes_collected == 0) return "red";
     if (comic.ongoing) return "yellow";
     return "orange";
