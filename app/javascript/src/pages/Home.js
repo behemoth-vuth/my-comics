@@ -166,7 +166,8 @@ const Home = () => {
 
   useEffect(() => {
     const q = {
-      title_or_copyright_title_or_author_i_cont: query
+      title_or_copyright_title_or_author_i_cont: query,
+      volumes_collected_not_eq: 0,
     };
 
     fetchComics(q).then(response => {
@@ -212,6 +213,7 @@ const Home = () => {
       default:
         conditions = {
           title_or_copyright_title_or_author_i_cont: query,
+          volumes_collected_not_eq: 0,
         };
         break;
     }
