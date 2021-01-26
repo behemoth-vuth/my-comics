@@ -186,14 +186,14 @@ const Home = () => {
       case 1:
         conditions = {
           title_or_copyright_title_or_author_i_cont: query,
-          ongoing_eq: false,
+          ongoing_not_eq: true,
           finished: true,
         };
         break;
       case 2:
         conditions = {
           title_or_copyright_title_or_author_i_cont: query,
-          ongoing_eq: false,
+          ongoing_not_eq: true,
           volumes_collected_gt: 0,
         };
         break;
@@ -239,7 +239,7 @@ const Home = () => {
 
     if (loggedIn) {
       setModalDisplayed(true);
-      setEditingComic({});
+      setEditingComic({ongoing: 0});
     } else {
       setLoginDisplayed(true);
     }
