@@ -22,13 +22,15 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer "volumes_collected"
     t.integer "volumes_total"
     t.boolean "ongoing"
-    t.boolean "finished"
+    t.boolean "hiatus"
     t.string "thumbnail"
+    t.text "meta", size: :medium
+    t.date "last_saved_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "upcoming", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin", force: :cascade do |t|
+  create_table "upcomings", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin", force: :cascade do |t|
     t.date "date", null: false
     t.integer "comic_id", null: false
     t.integer "volume"

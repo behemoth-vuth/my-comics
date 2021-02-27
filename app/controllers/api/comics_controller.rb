@@ -3,8 +3,9 @@ module Api
     protect_from_forgery with: :null_session
 
     def index
-      comics = Comic.all.order(updated_at: :desc).ransack(params[:q]).result
-      comics = comics.where('volumes_collected = volumes_total') if params[:q][:finished]
+      comics = Comic.all
+      comics = Comic.send(params[:q][:state]) if params[:q][:state].present?
+      comics = comics.order(last_saved_at: :desc).ransack(params[:q]).result
       render json: comics,
              each_serializer: ::ComicSerializer,
              include: [:publisher]
@@ -12,14 +13,17 @@ module Api
 
     def update
       @comic = Comic.find(params[:id])
+      updated_now = params[:volumes_collected].to_i > @comic.volumes_collected || params[:updated_now] == 'true'
       @comic.update!(comic_params)
+      @comic.update!(last_saved_at: Time.now) if updated_now
       render json: :ok
     rescue StandardError => e
       render json: e.message, status: :unprocessable_entity
     end
 
     def create
-      Comic.create!(comic_params)
+      comic = Comic.create!(comic_params)
+      comic.update!(last_saved_at: Time.now)
       render json: :ok
     rescue StandardError => e
       render json: e.message, status: :unprocessable_entity
@@ -46,8 +50,10 @@ module Api
         :volumes_collected,
         :volumes_total,
         :ongoing,
-        :finished,
-        :thumbnail
+        :hiatus,
+        :thumbnail,
+        :last_saved_at,
+        meta: %i[paper_size age_restriction]
       )
     end
   end

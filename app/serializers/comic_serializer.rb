@@ -9,9 +9,15 @@ class ComicSerializer < ActiveModel::Serializer
              :volumes_collected,
              :volumes_total,
              :ongoing,
-             :finished,
+             :hiatus,
              :thumbnail,
-             :publisher_id
+             :publisher_id,
+             :meta,
+             :last_saved_at
 
   belongs_to :publisher
+
+  def meta
+    object.meta || {}
+  end
 end

@@ -8,8 +8,10 @@ create_table "comics", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=
   t.integer :volumes_collected
   t.integer :volumes_total
   t.boolean :ongoing
-  t.boolean :finished
+  t.boolean :hiatus
   t.string :thumbnail
+  t.text :meta, size: :medium
+  t.date :last_saved_at
 
   t.timestamps
 end

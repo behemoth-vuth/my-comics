@@ -5,11 +5,13 @@ import { serialize } from "object-to-formdata";
 const ComicModal = (props) => {
   const onClose = props.onClose;
   const comic = props.comic;
+  const onSave = props.onSave;
 
   const [publishers, setPublishers] = useState([]);
   const [data, setData] = useState(comic);
   const [file, setFile] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
+  const [updatedNow, setUpdatedNow] = useState(false);
 
   useEffect(() => {
     document.body.classList.add("modal-open");
@@ -48,6 +50,7 @@ const ComicModal = (props) => {
       if (file) formData.thumbnail = file;
 
       formData.publisher_id = formData.publisher_id || 1;
+      formData.updated_now = updatedNow;
 
       const serializedData = serialize(formData);
 
@@ -57,12 +60,13 @@ const ComicModal = (props) => {
 
       if (isEdit) {
         serializedData.append("_method", "put");
-        axios.post("/api/comics/" + comic.id, serializedData, headers);
+        await axios.post("/api/comics/" + comic.id, serializedData, headers);
       } else {
-        axios.post("/api/comics", serializedData, headers);
+        await axios.post("/api/comics", serializedData, headers);
       }
 
-      window.location.reload();
+      await onSave();
+      onClose();
     } catch (e) {
       alert(e.message);
     }
@@ -71,7 +75,8 @@ const ComicModal = (props) => {
   async function destroy() {
     try {
       axios.delete("/api/comics/" + comic.id);
-      window.location.reload();
+      await onSave();
+      onClose();
     } catch (e) {
       alert(e.message);
     }
@@ -171,16 +176,50 @@ const ComicModal = (props) => {
                         <input
                           type="checkbox"
                           className="custom-control-input"
-                          id="finished"
-                          checked={data.finished}
-                          onChange={(event) => setData({ ...data, finished: event.target.checked })}
+                          id="hiatus"
+                          checked={data.hiatus}
+                          onChange={(event) => setData({ ...data, hiatus: event.target.checked })}
                         />
-                        <label className="custom-control-label" htmlFor="finished">Finished</label>
+                        <label className="custom-control-label" htmlFor="hiatus">Hiatus</label>
                       </div>
                     </span>
                   </div>
                 </div>
               </div>
+              <div className="form-group">
+                <label>Paper Size</label>
+                <input className="form-control" required value={data.meta.paper_size} onChange={(event) => setData({ ...data, meta: {...data.meta, paper_size: event.target.value} })} />
+              </div>
+              <div className="form-group">
+                <label>Age Restriction</label>
+                <input className="form-control" required value={data.meta.age_restriction} onChange={(event) => setData({ ...data, meta: {...data.meta, age_restriction: event.target.value} })} />
+              </div>
+              <div className="form-group">
+                <label>Last Updated</label>
+                <div className="input-group">
+                  <input
+                    className="form-control"
+                    required
+                    value={data.last_saved_at}
+                    disabled={updatedNow}
+                    onChange={(event) => setData({ ...data, last_saved_at: event.target.value })}
+                  />
+                  <div className="input-group-append">
+                    <span className="input-group-text">
+                      <div className="custom-control custom-checkbox">
+                        <input
+                          type="checkbox"
+                          className="custom-control-input"
+                          id="last_saved_at"
+                          onChange={(event) => setUpdatedNow(event.target.checked)}
+                        />
+                        <label className="custom-control-label" htmlFor="last_saved_at">Now</label>
+                      </div>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-danger" onClick={destroy}>Delete</button>

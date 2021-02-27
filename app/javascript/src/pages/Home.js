@@ -43,7 +43,7 @@ const CheckBox = styled.div`
   #red ~ .custom-control-label::before {
     background-color: #f44336;
   }
-`
+`;
 
 const AddButton = styled.div`
   position: fixed;
@@ -59,10 +59,8 @@ const AddButton = styled.div`
   &:hover {
     > span {
       color: #9abb82;
-      box-shadow:
-        inset 0 2px 3px rgba(255,255,255,0.13),
-        0 5px 8px rgba(0,0,0,0.35),
-        0 3px 10px 4px rgba(0,0,0,0.2);
+      box-shadow: inset 0 2px 3px rgba(255, 255, 255, 0.13),
+        0 5px 8px rgba(0, 0, 0, 0.35), 0 3px 10px 4px rgba(0, 0, 0, 0.2);
     }
   }
 
@@ -75,19 +73,17 @@ const AddButton = styled.div`
     font-size: 45px;
     text-align: center;
     line-height: 65px;
-    text-shadow: 0 2px 1px rgba(0,0,0,0.25);
+    text-shadow: 0 2px 1px rgba(0, 0, 0, 0.25);
     border-radius: 50%;
     background: #b25244;
     background: linear-gradient(#f7f2f6, #b2ac9e);
     transition: all 0.3s ease-out;
     z-index: -1;
-    box-shadow:
-        inset 0 2px 3px rgba(255,255,255,0.13),
-        0 5px 8px rgba(0,0,0,0.3),
-        0 10px 10px 4px rgba(0,0,0,0.3);
+    box-shadow: inset 0 2px 3px rgba(255, 255, 255, 0.13),
+      0 5px 8px rgba(0, 0, 0, 0.3), 0 10px 10px 4px rgba(0, 0, 0, 0.3);
 
     &:before {
-      content: ""; 
+      content: "";
       position: absolute;
       left: -10px;
       right: -10px;
@@ -95,13 +91,13 @@ const AddButton = styled.div`
       bottom: -10px;
       z-index: -1;
       border-radius: inherit;
-      box-shadow: inset 0 10px 10px rgba(0,0,0,0.13); 
+      box-shadow: inset 0 10px 10px rgba(0, 0, 0, 0.13);
       -webkit-filter: blur(1px);
       filter: blur(1px);
     }
 
     &:after {
-      content: ""; 
+      content: "";
       position: absolute;
       left: -10px;
       right: -10px;
@@ -109,10 +105,8 @@ const AddButton = styled.div`
       bottom: -10px;
       z-index: -2;
       border-radius: inherit;
-      box-shadow:
-          inset 0 1px 0 rgba(255,255,255,0.1),
-          0 1px 2px rgba(0,0,0,0.3),
-          0 0 10px rgba(0,0,0,0.15);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 1px 2px rgba(0, 0, 0, 0.3), 0 0 10px rgba(0, 0, 0, 0.15);
     }
 
     > span:after {
@@ -128,14 +122,13 @@ const AddButton = styled.div`
       border-radius: 50%;
       background: #d2cbc3;
       background: linear-gradient(#cbc7bc, #d2cbc3);
-      box-shadow:
-          0 -2px 5px rgba(255,255,255,0.05),
-          0 2px 5px rgba(255,255,255,0.1);
-      -webkit-filter:blur(1px);
+      box-shadow: 0 -2px 5px rgba(255, 255, 255, 0.05),
+        0 2px 5px rgba(255, 255, 255, 0.1);
+      -webkit-filter: blur(1px);
       filter: blur(1px);
     }
   }
-`
+`;
 
 const SearchInput = styled.div`
   display: flex;
@@ -145,152 +138,187 @@ const SearchInput = styled.div`
   .form-control {
     max-width: 670px;
   }
-`
+`;
 
-const paramsSerializer = (params = {}) => qs.stringify(params, { arrayFormat: "brackets" });
+const paramsSerializer = (params = {}) =>
+  qs.stringify(params, { arrayFormat: "brackets" });
 
 const fetchComics = async (q) => {
   const params = { q: q };
   return await axios.get("/api/comics.json", {
     params,
-    paramsSerializer
+    paramsSerializer,
   });
-}
+};
 
 const Home = () => {
-  const [comics, setComics] = useState([])
-  const [query, setQuery] = useState("")
-  const [modalDisplayed, setModalDisplayed] = useState(false)
-  const [loginDisplayed, setLoginDisplayed] = useState(false)
-  const [editingComic, setEditingComic] = useState({})
+  const [comics, setComics] = useState([]);
+  const [query, setQuery] = useState("");
+  const [modalDisplayed, setModalDisplayed] = useState(false);
+  const [loginDisplayed, setLoginDisplayed] = useState(false);
+  const [editingComic, setEditingComic] = useState({});
+  const [status, setStatus] = useState(0);
 
   useEffect(() => {
-    const q = {
-      title_or_copyright_title_or_author_i_cont: query,
-      volumes_collected_not_eq: 0,
-    };
-
-    fetchComics(q).then(response => {
-      setComics(response.data);
-    }).catch(error => console.log(error));
-  }, [query]);
+    search();
+  }, [query, status]);
 
   const handleQuery = (event) => {
     setQuery(event.target.value);
-  }
+  };
 
-  const handleConditions = (value) => {
-    let conditions = {};
+  const search = () => {
+    const q = handleConditions();
+    fetchComics(q)
+      .then((response) => {
+        setComics(response.data);
+      })
+      .catch((error) => console.log(error));
+  };
 
-    switch (Number(value)) {
+  const handleConditions = () => {
+    switch (Number(status)) {
       case 1:
-        conditions = {
+        return {
           title_or_copyright_title_or_author_i_cont: query,
-          ongoing_not_eq: true,
-          finished: true,
+          state: "finished",
         };
-        break;
       case 2:
-        conditions = {
+        return {
           title_or_copyright_title_or_author_i_cont: query,
-          ongoing_not_eq: true,
-          volumes_collected_gt: 0,
+          state: "collecting",
         };
-        break;
       case 3:
-        conditions = {
+        return {
           title_or_copyright_title_or_author_i_cont: query,
-          ongoing_eq: true,
-          volumes_collected_gt: 0,
+          state: "ongoing",
         };
-        break;
       case 4:
-        conditions = {
+        return {
           title_or_copyright_title_or_author_i_cont: query,
-          volumes_collected_eq: 0,
+          state: "following",
         };
-        break;
       default:
-        conditions = {
+        return {
           title_or_copyright_title_or_author_i_cont: query,
           volumes_collected_not_eq: 0,
         };
-        break;
     }
-
-    fetchComics(conditions).then(response => {
-      setComics(response.data);
-    }).catch(error => alert(error.message));
-  }
+  };
 
   const onComicItemActivated = (comic) => {
     const loggedIn = window.localStorage.getItem("my-comics-login");
 
     if (loggedIn) {
+      const editingComic = JSON.parse(JSON.stringify(comic));
+      editingComic.meta = editingComic.meta || {};
       setModalDisplayed(true);
-      setEditingComic(comic);
+      setEditingComic(editingComic);
     } else {
       setLoginDisplayed(true);
     }
-  }
+  };
 
   const onCreateNewComic = () => {
     const loggedIn = window.localStorage.getItem("my-comics-login");
 
     if (loggedIn) {
       setModalDisplayed(true);
-      setEditingComic({ongoing: 0});
+      setEditingComic({ ongoing: 0, meta: {} });
     } else {
       setLoginDisplayed(true);
     }
-  }
+  };
 
   return (
     <Fragment>
       <div className="container">
         <div className="d-flex justify-content-center px-3 my-3">
           <CheckBox className="custom-control custom-radio">
-            <input type="radio" className="custom-control-input" id="all" name="filter" onChange={() => handleConditions(0)} />
+            <input
+              type="radio"
+              className="custom-control-input"
+              id="all"
+              name="filter"
+              onChange={() => setStatus(0)}
+            />
             <label className="custom-control-label" htmlFor="all"></label>
           </CheckBox>
           <CheckBox className="custom-control custom-radio">
-            <input type="radio" className="custom-control-input" id="green" name="filter" onChange={() => handleConditions(1)} />
+            <input
+              type="radio"
+              className="custom-control-input"
+              id="green"
+              name="filter"
+              onChange={() => setStatus(1)}
+            />
             <label className="custom-control-label" htmlFor="green"></label>
           </CheckBox>
           <CheckBox className="custom-control custom-radio">
-            <input type="radio" className="custom-control-input" id="orange" name="filter" onChange={() => handleConditions(2)} />
+            <input
+              type="radio"
+              className="custom-control-input"
+              id="orange"
+              name="filter"
+              onChange={() => setStatus(2)}
+            />
             <label className="custom-control-label" htmlFor="orange"></label>
           </CheckBox>
           <CheckBox className="custom-control custom-radio">
-            <input type="radio" className="custom-control-input" id="yellow" name="filter" onChange={() => handleConditions(3)} />
+            <input
+              type="radio"
+              className="custom-control-input"
+              id="yellow"
+              name="filter"
+              onChange={() => setStatus(3)}
+            />
             <label className="custom-control-label" htmlFor="yellow"></label>
           </CheckBox>
           <CheckBox className="custom-control custom-radio">
-            <input type="radio" className="custom-control-input" id="red" name="filter" onChange={() => handleConditions(4)} />
+            <input
+              type="radio"
+              className="custom-control-input"
+              id="red"
+              name="filter"
+              onChange={() => setStatus(4)}
+            />
             <label className="custom-control-label" htmlFor="red"></label>
           </CheckBox>
         </div>
 
         <SearchInput>
-          <input placeholder="Search" className="form-control text-center w-100" onChange={handleQuery} />
+          <input
+            placeholder="Search"
+            className="form-control text-center w-100"
+            onChange={handleQuery}
+          />
         </SearchInput>
 
         <AddButton onClick={onCreateNewComic}>
-          <span><span>&#43;</span></span>
+          <span>
+            <span>&#43;</span>
+          </span>
         </AddButton>
       </div>
 
-      <ComicList list={comics} onComicItemActivated={onComicItemActivated}></ComicList>
+      <ComicList
+        list={comics}
+        onComicItemActivated={onComicItemActivated}
+      ></ComicList>
 
-      {modalDisplayed &&
-        <ComicModal comic={editingComic} onClose={() => setModalDisplayed(false)}></ComicModal>
-      }
+      {modalDisplayed && (
+        <ComicModal
+          comic={editingComic}
+          onSave={search}
+          onClose={() => setModalDisplayed(false)}
+        ></ComicModal>
+      )}
 
-      {loginDisplayed &&
+      {loginDisplayed && (
         <LoginModal onClose={() => setLoginDisplayed(false)}></LoginModal>
-      }
+      )}
     </Fragment>
-  )
-}
+  );
+};
 
 export default Home;

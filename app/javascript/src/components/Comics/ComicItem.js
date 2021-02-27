@@ -13,10 +13,10 @@ const AuthorLink = styled.div`
 
   a:not(:last-child) {
     &:after {
-      content: ", "; 
+      content: ", ";
     }
   }
-`
+`;
 
 const ComicCard = styled.li`
   width: 187.5px;
@@ -145,7 +145,7 @@ const ComicCard = styled.li`
       }
     }
   }
-`
+`;
 
 const ComicItem = (props) => {
   const comic = props.comic;
@@ -161,20 +161,26 @@ const ComicItem = (props) => {
     }
 
     return comic.year_start + "-" + comic.year_end;
-  }
+  };
 
   const status = () => {
-    if (!comic.ongoing && comic.volumes_collected === comic.volumes_total) return "green";
+    if (!comic.ongoing && comic.volumes_collected === comic.volumes_total)
+      return "green";
     if (comic.volumes_collected == 0) return "red";
     if (comic.ongoing) return "yellow";
     return "orange";
-  }
+  };
 
   return (
     <ComicCard>
       <div className="inner">
         <div className="thumbnail" onClick={() => activate(comic)}>
-          <img src={comic.thumbnail.url} onError={(event) => event.target.src = "https://dummyimage.com/113x176/000/ffffff"} />
+          <img
+            src={comic.thumbnail.url}
+            onError={(event) =>
+              (event.target.src = "https://dummyimage.com/113x176/000/ffffff")
+            }
+          />
         </div>
 
         <div className={"status " + status()}>
@@ -187,19 +193,33 @@ const ComicItem = (props) => {
             <img src={comic.publisher?.attributes.logo} />
             <span>{year()}</span>
           </Link>
-          <div className="name">
+          <div className="name mb-2">
             <div className="title">{comic.title}</div>
-            <div className="small text-uppercase text-secondary">{comic.copyright_title}</div>
+            <div className="small text-uppercase text-secondary">
+              {comic.copyright_title}
+            </div>
             <AuthorLink>
               {comic.author.split(",").map((item, index) => (
-                <Link key={index} to={"/author/" + item.trim()}>{item.trim()}</Link>
+                <Link key={index} to={"/author/" + item.trim()}>
+                  {item.trim()}
+                </Link>
               ))}
             </AuthorLink>
+          </div>
+          <div className="d-flex align-items-center">
+            {comic.meta?.paper_size && (
+              <div className="text-muted mr-2">{comic.meta?.paper_size}</div>
+            )}
+            {comic.meta?.age_restriction && (
+              <span className="badge badge-danger">
+                {comic.meta.age_restriction}
+              </span>
+            )}
           </div>
         </div>
       </div>
     </ComicCard>
-  )
-}
+  );
+};
 
 export default ComicItem;
