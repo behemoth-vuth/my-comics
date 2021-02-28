@@ -131,7 +131,7 @@ export const AddButton = styled.div`
   }
 `;
 
-const SearchInput = styled.div`
+export const SearchInput = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
