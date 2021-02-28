@@ -1,0 +1,39 @@
+@media (max-width: 720px) {
+  .v-container {
+    padding: 0;
+  }
+}
+
+.table-flex {
+  background: white;
+  color: #333333 !important;
+
+  @media (max-width: 720px) {
+    thead {
+      display: none;
+    }
+
+    tr {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    td {
+      display: block;
+      border: none;
+
+      &[name="date"] {
+        width: 100%;
+        background: #e4e4e4;
+      }
+
+      &:nth-child(2) {
+        flex: 1;
+      }
+    }
+
+    td:empty {
+      display: none;
+    }
+  }
+}

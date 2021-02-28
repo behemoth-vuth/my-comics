@@ -17,6 +17,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
+    "react-select": "^4.1.0",
     "styled-components": "^5.2.0",
     "turbolinks": "^5.2.0"
   },

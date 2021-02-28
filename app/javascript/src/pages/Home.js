@@ -6,6 +6,7 @@ import styled from "styled-components";
 import ComicList from "@/components/Comics/ComicList";
 import ComicModal from "@/components/Comics/ComicModal";
 import LoginModal from "@/components/Shared/LoginModal";
+import UpcomingModal from "@/components/Upcoming/UpcomingModal";
 
 const CheckBox = styled.div`
   #green.custom-control-input:checked ~ .custom-control-label::before {
@@ -45,7 +46,7 @@ const CheckBox = styled.div`
   }
 `;
 
-const AddButton = styled.div`
+export const AddButton = styled.div`
   position: fixed;
   top: 10px;
   right: 10px;
@@ -158,6 +159,7 @@ const Home = () => {
   const [loginDisplayed, setLoginDisplayed] = useState(false);
   const [editingComic, setEditingComic] = useState({});
   const [status, setStatus] = useState(0);
+  const [upcomingDisplayed, setUpcomingDisplayed] = useState(false);
 
   useEffect(() => {
     search();
@@ -294,6 +296,10 @@ const Home = () => {
           />
         </SearchInput>
 
+        <div className="text-center mb-5">
+          <a href="/upcoming">Publishing Schedule</a>
+        </div>
+
         <AddButton onClick={onCreateNewComic}>
           <span>
             <span>&#43;</span>
@@ -311,11 +317,23 @@ const Home = () => {
           comic={editingComic}
           onSave={search}
           onClose={() => setModalDisplayed(false)}
+          onCreateSchedule={() => {
+            setModalDisplayed(false);
+            setUpcomingDisplayed(true);
+          }}
         ></ComicModal>
       )}
 
       {loginDisplayed && (
         <LoginModal onClose={() => setLoginDisplayed(false)}></LoginModal>
+      )}
+
+      {upcomingDisplayed && (
+        <UpcomingModal
+          comic={editingComic}
+          onClose={() => setUpcomingDisplayed(false)}
+          onSave={() => window.location.href="/upcoming"}
+        ></UpcomingModal>
       )}
     </Fragment>
   );

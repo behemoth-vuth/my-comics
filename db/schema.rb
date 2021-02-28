@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer "comic_id", null: false
     t.integer "volume"
     t.integer "combo"
+    t.boolean "official"
     t.datetime "grabbed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

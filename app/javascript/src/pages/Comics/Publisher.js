@@ -13,23 +13,29 @@ const Publisher = (props) => {
 
   useEffect(() => {
     const paramId = props.match.params.id;
-    const params = { q: { publisher_id_eq: paramId } };
-    const paramsSerializer = (params = {}) => qs.stringify(params, { arrayFormat: "brackets" });
 
     axios.get("/api/publishers/" + paramId)
       .then(response => setPublisher(response.data.attributes))
       .catch(error => alert(error.message));
+
+    fetchComics();
+  }, [props.match.params.author]);
+
+  const onComicItemActivated = (comic) => {
+    setModalDisplayed(true);
+    setEditingComic(comic);
+  }
+
+  function fetchComics() {
+    const paramId = props.match.params.id;
+    const params = { q: { publisher_id_eq: paramId } };
+    const paramsSerializer = (params = {}) => qs.stringify(params, { arrayFormat: "brackets" });
 
     axios.get("/api/comics.json", {
       params,
       paramsSerializer
     }).then(response => setComics(response.data))
       .catch(error => alert(error.message));
-  }, [props.match.params.author]);
-
-  const onComicItemActivated = (comic) => {
-    setModalDisplayed(true);
-    setEditingComic(comic);
   }
 
   return (
@@ -44,7 +50,7 @@ const Publisher = (props) => {
       <ComicList list={comics} onComicItemActivated={onComicItemActivated}></ComicList>
 
       {modalDisplayed &&
-        <ComicModal comic={editingComic} onClose={() => setModalDisplayed(false)}></ComicModal>
+        <ComicModal comic={editingComic} onClose={() => setModalDisplayed(false)} onSave={fetchComics}></ComicModal>
       }
     </Fragment>
   )

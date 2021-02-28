@@ -3,51 +3,55 @@ module Api
     protect_from_forgery with: :null_session
 
     def index
-      # upcoming = Upcoming.available.order(date: :asc).ransack(params[:q]).result
-      # render json: upcoming,
-      #        each_serializer: ::UpcomingSerializer,
-      #        include: [:comic]
+      upcoming = Upcoming.available.order(date: :asc).ransack(params[:q]).result
+      upcoming = upcoming.includes(:comic).order('comics.publisher_id asc')
+      render json: upcoming,
+             each_serializer: ::UpcomingSerializer,
+             include: [comic: :publisher]
     end
 
-    # def update
-    #   @comic = Comic.find(params[:id])
-    #   @comic.update!(comic_params)
-    #   render json: :ok
-    # rescue StandardError => e
-    #   render json: e.message, status: :unprocessable_entity
-    # end
+    def update
+      @upcoming = Upcoming.find(params[:id])
+      @upcoming.update!(upcoming_params)
+      render json: :ok
+    rescue StandardError => e
+      render json: e.message, status: :unprocessable_entity
+    end
 
-    # def create
-    #   Comic.create!(comic_params)
-    #   render json: :ok
-    # rescue StandardError => e
-    #   render json: e.message, status: :unprocessable_entity
-    # end
+    def create
+      Upcoming.create!(upcoming_params)
+      render json: :ok
+    rescue StandardError => e
+      render json: e.message, status: :unprocessable_entity
+    end
 
-    # def destroy
-    #   @comic = Comic.find(params[:id])
-    #   @comic.destroy!
-    #   render json: :ok
-    # rescue StandardError => e
-    #   render json: e.message, status: :unprocessable_entity
-    # end
+    def destroy
+      @upcoming = Upcoming.find(params[:id])
+      @upcoming.destroy!
+      render json: :ok
+    rescue StandardError => e
+      render json: e.message, status: :unprocessable_entity
+    end
 
-    # private
+    def grab
+      @upcoming = Upcoming.find(params[:id])
+      @upcoming.update!(grabbed_at: Time.now)
+      @upcoming.comic.update!(volumes_collected: @upcoming.volume - 1 + @upcoming.combo, last_saved_at: Time.now)
+      render json: :ok
+    rescue StandardError => e
+      render json: e.message, status: :unprocessable_entity
+    end
 
-    # def comic_params
-    #   params.permit(
-    #     :title,
-    #     :copyright_title,
-    #     :author,
-    #     :publisher_id,
-    #     :year_start,
-    #     :year_end,
-    #     :volumes_collected,
-    #     :volumes_total,
-    #     :ongoing,
-    #     :finished,
-    #     :thumbnail
-    #   )
-    # end
+    private
+
+    def upcoming_params
+      params.permit(
+        :comic_id,
+        :date,
+        :volume,
+        :combo,
+        :official
+      )
+    end
   end
 end

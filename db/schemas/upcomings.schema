@@ -3,6 +3,7 @@ create_table "upcomings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARS
   t.integer :comic_id, null: false
   t.integer :volume
   t.integer :combo
+  t.boolean :official
   t.datetime :grabbed_at
 
   t.timestamps

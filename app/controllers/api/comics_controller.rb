@@ -4,7 +4,7 @@ module Api
 
     def index
       comics = Comic.all
-      comics = Comic.send(params[:q][:state]) if params[:q][:state].present?
+      comics = Comic.send(params[:q][:state]) if params[:q].present? && params[:q][:state].present?
       comics = comics.order(last_saved_at: :desc).ransack(params[:q]).result
       render json: comics,
              each_serializer: ::ComicSerializer,

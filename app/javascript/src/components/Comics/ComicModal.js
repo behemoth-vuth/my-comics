@@ -6,6 +6,7 @@ const ComicModal = (props) => {
   const onClose = props.onClose;
   const comic = props.comic;
   const onSave = props.onSave;
+  const onCreateSchedule = props.onCreateSchedule;
 
   const [publishers, setPublishers] = useState([]);
   const [data, setData] = useState(comic);
@@ -89,6 +90,7 @@ const ComicModal = (props) => {
           <form className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Add Comic</h5>
+              <button type="button" className="btn btn-success ml-auto" onClick={onCreateSchedule}>Create Schedule</button>
               <button type="button" className="close" onClick={onClose}>
                 <span>&times;</span>
               </button>
@@ -199,6 +201,7 @@ const ComicModal = (props) => {
                 <div className="input-group">
                   <input
                     className="form-control"
+                    type="date"
                     required
                     value={data.last_saved_at}
                     disabled={updatedNow}

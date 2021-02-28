@@ -4,7 +4,8 @@ class UpcomingSerializer < ActiveModel::Serializer
              :volume,
              :combo,
              :grabbed_at,
-             :comic_id
+             :comic_id,
+             :official
 
   belongs_to :comic
 end
