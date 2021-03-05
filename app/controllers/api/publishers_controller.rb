@@ -1,7 +1,8 @@
 module Api
   class PublishersController < ApplicationController
     def index
-      render json: Publisher.all.to_json
+      render json: Publisher.all,
+             each_serializer: ::PublisherSerializer
     end
 
     def show

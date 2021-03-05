@@ -9,11 +9,12 @@ const UpcomingPage = (props) => {
   const [isEdit, setIsEdit] = useState(false);
   const [item, setItem] = useState(null);
   const [query, setQuery] = useState("");
+  const [lastDate, setLastDate] = useState("");
 
   async function grabComic(item) {
     try {
       await axios.post("/api/upcoming/" + item.id + "/grab");
-      window.location.reload();
+      fetchSchedules();
     } catch (e) {
       alert(e.message);
     }
@@ -25,11 +26,29 @@ const UpcomingPage = (props) => {
     setModalDisplayed(true);
   }
 
-  useEffect(() => {
+  function fetchSchedules() {
     axios
       .get("/api/upcoming.json")
       .then((response) => setList(response.data))
       .catch((error) => alert(error.message));
+  }
+
+  function skipSchedule(item) {
+    axios
+      .put("/api/upcoming/" + item.id, { ...item, skipped_at: new Date() })
+      .then(() => fetchSchedules())
+      .catch((error) => alert(error.message));
+  }
+
+  function takeSchedule(item) {
+    axios
+      .put("/api/upcoming/" + item.id, { ...item, grabbed_at: item.date })
+      .then(() => fetchSchedules())
+      .catch((error) => alert(error.message));
+  }
+
+  useEffect(() => {
+    fetchSchedules();
   }, []);
 
   return (
@@ -85,17 +104,24 @@ const UpcomingPage = (props) => {
                       }}
                     >
                       <img
-                        src={item.comic.publisher?.attributes?.logo}
+                        src={item.comic.publisher?.logo}
                         width="30"
                         style={{ marginRight: "8px" }}
                       />
                       {item.comic.title}
-                      {item.volume == 1 && (
-                        <span className="badge badge-warning ml-1">NEW</span>
-                      )}
-                      {item.volume == item.comic.volumes_total && (
-                        <span className="badge badge-success ml-1">END</span>
-                      )}
+                      {item.volume <= 1 &&
+                        item.combo == item.comic.volumes_total &&
+                        item.comic.original_status == "finished" && (
+                          <span className="badge badge-danger ml-1">FULL</span>
+                        )}
+                      {item.volume <= 1 &&
+                        item.combo != item.comic.volumes_total && (
+                          <span className="badge badge-warning ml-1">NEW</span>
+                        )}
+                      {item.volume == item.comic.volumes_total &&
+                        item.comic.original_status == "finished" && (
+                          <span className="badge badge-success ml-1">END</span>
+                        )}
                     </a>
                   </td>
                   <td>
@@ -106,11 +132,22 @@ const UpcomingPage = (props) => {
                   </td>
                   <td>
                     <a
-                      href="#"
-                      className="text-success"
+                      className="btn btn-link text-success p-0 mr-2"
                       onClick={() => grabComic(item)}
                     >
                       Get
+                    </a>
+                    <a
+                      className="btn btn-link text-danger p-0"
+                      onClick={() => skipSchedule(item)}
+                    >
+                      Skip
+                    </a>
+                    <a
+                      className="btn btn-link text-info p-0 ml-2"
+                      onClick={() => takeSchedule(item)}
+                    >
+                      Take
                     </a>
                   </td>
                 </tr>
@@ -125,9 +162,13 @@ const UpcomingPage = (props) => {
           isEdit={isEdit}
           schedule={item}
           schedules={list}
+          lastDate={lastDate}
           onClose={() => setModalDisplayed(false)}
-          onSave={() => window.location.reload()}
-          onDestroy={() => window.location.reload()}
+          onSave={(date) => {
+            fetchSchedules();
+            setLastDate(date);
+          }}
+          onDestroy={() => fetchSchedules()}
         ></UpcomingModal>
       )}
     </Fragment>

@@ -11,6 +11,8 @@ const UpcomingModal = ({
   isEdit = false,
   schedule,
   schedules,
+  timeCustomable,
+  lastDate,
 }) => {
   const [data, setData] = useState(
     isEdit
@@ -21,6 +23,7 @@ const UpcomingModal = ({
           combo: 1,
           official: true,
           date: "",
+          grabbed_at: "",
         }
   );
 
@@ -37,12 +40,15 @@ const UpcomingModal = ({
       )
     );
 
-    if (!isEdit) {
+    if (!isEdit && schedules) {
+      const existed = schedules.filter((item) => item.comic_id == comic.id);
+      const maxVolume =
+        existed.sort((a, b) => (b.volume < a.volume ? -1 : 1))[0]?.volume || 0;
+
       setData({
         ...data,
-        date: JSON.parse(JSON.stringify(schedules)).sort((a, b) =>
-          b.date < a.date ? -1 : 1
-        )[0].date,
+        volume: maxVolume + 1,
+        date: lastDate || data.date,
       });
     }
   }, []);
@@ -69,7 +75,7 @@ const UpcomingModal = ({
         await axios.post("/api/upcoming", data);
       }
 
-      await onSave();
+      await onSave(data.date);
       onClose();
     } catch (e) {
       alert(e.message);
@@ -94,13 +100,16 @@ const UpcomingModal = ({
       setData({
         ...data,
         comic_id: option.id,
-        volume: maxVolume + 1,
+        volume: maxVolume + (maxVolume >= option.volumes_total ? 0 : 1),
       });
     } else {
       setData({
         ...data,
         comic_id: option.id,
-        volume: option.volumes_collected + 1,
+        volume:
+          option.volumes_collected + 1 >= option.volumes_total
+            ? option.volumes_total
+            : option.volumes_collected + 1,
       });
     }
   }
@@ -130,12 +139,26 @@ const UpcomingModal = ({
                   <h2>{comic.title}</h2>
                 </div>
               )}
+              {!timeCustomable && (
+                <div className="form-group">
+                  <label>Change Comic</label>
+                  <SelectSearch
+                    options={comics}
+                    placeholder="Choose your comic"
+                    onChange={onComicChange}
+                  />
+                </div>
+              )}
               <div className="form-group">
-                <label>Change Comic</label>
-                <SelectSearch
-                  options={comics}
-                  placeholder="Choose your comic"
-                  onChange={onComicChange}
+                <label>Volume</label>
+                <input
+                  className="form-control"
+                  type="number"
+                  required
+                  value={data.volume}
+                  onChange={(event) =>
+                    setData({ ...data, volume: event.target.value })
+                  }
                 />
               </div>
               <div className="form-group">
@@ -147,18 +170,6 @@ const UpcomingModal = ({
                   value={data.date}
                   onChange={(event) =>
                     setData({ ...data, date: event.target.value })
-                  }
-                />
-              </div>
-              <div className="form-group">
-                <label>Volume</label>
-                <input
-                  className="form-control"
-                  type="number"
-                  required
-                  value={data.volume}
-                  onChange={(event) =>
-                    setData({ ...data, volume: event.target.value })
                   }
                 />
               </div>
@@ -189,6 +200,17 @@ const UpcomingModal = ({
                     Official
                   </label>
                 </div>
+              </div>
+              <div className="form-group">
+                <label>Collected at</label>
+                <input
+                  className="form-control"
+                  type="date"
+                  value={data.grabbed_at?.split("T").shift()}
+                  onChange={(event) =>
+                    setData({ ...data, grabbed_at: event.target.value })
+                  }
+                />
               </div>
             </div>
             <div className="modal-footer">

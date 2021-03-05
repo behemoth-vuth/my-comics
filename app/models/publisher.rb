@@ -1,4 +1,6 @@
 class Publisher < ActiveHash::Base
+  include ActiveModel::Serialization
+
   fields :id, :name, :logo
 
   add id: 1, name: 'NXB Kim Đồng', logo: '/images/publishers/kimdong.png'

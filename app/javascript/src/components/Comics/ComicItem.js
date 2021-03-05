@@ -190,11 +190,13 @@ const ComicItem = (props) => {
 
         <div className="detail">
           <Link className="publisher" to={"/publisher/" + comic.publisher_id}>
-            <img src={comic.publisher?.attributes.logo} />
+            <img src={comic.publisher?.logo} />
             <span>{year()}</span>
           </Link>
           <div className="name mb-2">
-            <div className="title">{comic.title}</div>
+            <Link className="title" to={"/comics/" + comic.id}>
+              {comic.title}
+            </Link>
             <div className="small text-uppercase text-secondary">
               {comic.copyright_title}
             </div>

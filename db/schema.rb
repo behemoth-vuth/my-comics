@@ -23,6 +23,8 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer "volumes_total"
     t.boolean "ongoing"
     t.boolean "hiatus"
+    t.integer "original_status"
+    t.integer "publishing_status"
     t.string "thumbnail"
     t.text "meta", size: :medium
     t.date "last_saved_at"
@@ -37,6 +39,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer "combo"
     t.boolean "official"
     t.datetime "grabbed_at"
+    t.datetime "skipped_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

@@ -15,7 +15,7 @@ const Publisher = (props) => {
     const paramId = props.match.params.id;
 
     axios.get("/api/publishers/" + paramId)
-      .then(response => setPublisher(response.data.attributes))
+      .then(response => setPublisher(response.data))
       .catch(error => alert(error.message));
 
     fetchComics();

@@ -5,6 +5,7 @@ create_table "upcomings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARS
   t.integer :combo
   t.boolean :official
   t.datetime :grabbed_at
+  t.datetime :skipped_at
 
   t.timestamps
 end

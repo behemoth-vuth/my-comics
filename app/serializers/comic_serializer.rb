@@ -13,9 +13,13 @@ class ComicSerializer < ActiveModel::Serializer
              :thumbnail,
              :publisher_id,
              :meta,
-             :last_saved_at
+             :original_status,
+             :publishing_status,
+             :last_saved_at,
+             :updated_at
 
   belongs_to :publisher
+  has_many :upcomings
 
   def meta
     object.meta || {}
