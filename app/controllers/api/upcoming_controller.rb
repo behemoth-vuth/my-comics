@@ -3,8 +3,8 @@ module Api
     protect_from_forgery with: :null_session
 
     def index
-      upcoming = Upcoming.available.order(date: :asc).ransack(params[:q]).result
-      upcoming = upcoming.includes(:comic).order('comics.publisher_id asc, upcomings.id asc')
+      upcoming = Upcoming.includes([:comic, {cover: :comic}]).available.order(date: :asc).ransack(params[:q]).result
+      upcoming = upcoming.order('comics.publisher_id asc, upcomings.id asc')
       render json: upcoming,
              each_serializer: ::UpcomingSerializer,
              include: [comic: :publisher]
@@ -20,13 +20,6 @@ module Api
     end
 
     def create
-      existed = Upcoming.find_by(comic_id: params[:comic_id], volume: params[:volume])
-      if existed.present?
-        existed.update!(date: params[:date], official: params[:official])
-        existed.update!(grabbed_at: params[:grabbed_at]) if params[:grabbed_at].present?
-        return render json: :ok
-      end
-
       @upcoming = Upcoming.create!(upcoming_params)
       @upcoming.comic.update!(last_saved_at: @upcoming.comic.upcomings.maximum(:grabbed_at))
       render json: :ok

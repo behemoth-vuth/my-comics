@@ -1,3 +1,4 @@
 require "users.schema"
 require "comics.schema"
 require "upcomings.schema"
+require "covers.schema"

@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(version: 0) do
   create_table "comics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin", force: :cascade do |t|
     t.string "title", null: false
     t.string "copyright_title", null: false
-    t.string "author", null: false
+    t.text "author", size: :medium, null: false
     t.integer "publisher_id"
     t.integer "year_start"
     t.integer "year_end"
@@ -28,6 +28,14 @@ ActiveRecord::Schema.define(version: 0) do
     t.string "thumbnail"
     t.text "meta", size: :medium
     t.date "last_saved_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "covers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin", force: :cascade do |t|
+    t.integer "comic_id", null: false
+    t.integer "volume", null: false
+    t.string "image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

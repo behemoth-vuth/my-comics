@@ -14,15 +14,50 @@ const ComicModal = (props) => {
   const [isEdit, setIsEdit] = useState(false);
   const [updatedNow, setUpdatedNow] = useState(false);
 
+  const ages = [
+    null,
+    "0+",
+    "P",
+    "T1",
+    "T2",
+    "T3",
+    "12+",
+    "13+",
+    "14+",
+    "15+",
+    "16+",
+    "17+",
+    "18+",
+  ];
+  const sizes = [
+    null,
+    "11.3x17.6",
+    "12x18",
+    "12.5x17.6",
+    "12.5x18",
+    "13x18",
+    "13x18.2",
+    "13x18.5",
+    "13x19",
+    "14x20.5",
+    "14.5x20.5",
+    "14.5x20",
+    "10.5x15",
+  ];
+
   useEffect(() => {
     document.body.classList.add("modal-open");
     setIsEdit(comic.id !== undefined);
+    
+    setData({
+      ...data,
+      original_status: data.original_status || "running",
+      publishing_status: data.publishing_status || "upcoming",
+    })
 
     axios
       .get("/api/publishers.json")
-      .then((response) =>
-        setPublishers(response.data)
-      )
+      .then((response) => setPublishers(response.data))
       .catch((error) => {
         alert(error.message);
         onClose();
@@ -229,7 +264,7 @@ const ComicModal = (props) => {
                     <select
                       className="form-control"
                       required
-                      value={data.original_status}
+                      value={data.original_status || "running"}
                       onChange={(event) =>
                         setData({
                           ...data,
@@ -240,6 +275,7 @@ const ComicModal = (props) => {
                       <option value="running">Running</option>
                       <option value="hiatus">Hiatus</option>
                       <option value="finished">Finished</option>
+                      <option value="dropped">Dropped</option>
                     </select>
                   </div>
                 </div>
@@ -249,7 +285,7 @@ const ComicModal = (props) => {
                     <select
                       className="form-control"
                       required
-                      value={data.publishing_status}
+                      value={data.publishing_status || "upcoming"}
                       onChange={(event) =>
                         setData({
                           ...data,
@@ -261,13 +297,14 @@ const ComicModal = (props) => {
                       <option value="running">Running</option>
                       <option value="hiatus">Hiatus</option>
                       <option value="finished">Finished</option>
+                      <option value="dropped">Dropped</option>
                     </select>
                   </div>
                 </div>
               </div>
               <div className="form-group">
                 <label>Paper Size</label>
-                <input
+                {/* <input
                   className="form-control"
                   required
                   value={data.meta.paper_size}
@@ -277,11 +314,28 @@ const ComicModal = (props) => {
                       meta: { ...data.meta, paper_size: event.target.value },
                     })
                   }
-                />
+                /> */}
+                <select
+                  className="form-control"
+                  required
+                  value={data.meta.paper_size}
+                  onChange={(event) =>
+                    setData({
+                      ...data,
+                      meta: { ...data.meta, paper_size: event.target.value },
+                    })
+                  }
+                >
+                  {sizes.map((item) => (
+                    <option key={item} value={item}>
+                      {item}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="form-group">
                 <label>Age Restriction</label>
-                <input
+                {/* <input
                   className="form-control"
                   required
                   value={data.meta.age_restriction}
@@ -294,7 +348,28 @@ const ComicModal = (props) => {
                       },
                     })
                   }
-                />
+                /> */}
+
+                <select
+                  className="form-control"
+                  required
+                  value={data.meta.age_restriction}
+                  onChange={(event) =>
+                    setData({
+                      ...data,
+                      meta: {
+                        ...data.meta,
+                        age_restriction: event.target.value,
+                      },
+                    })
+                  }
+                >
+                  {ages.map((item) => (
+                    <option key={item} value={item}>
+                      {item}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="form-group">
                 <label>Last Updated</label>

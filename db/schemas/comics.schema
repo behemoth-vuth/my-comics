@@ -1,7 +1,7 @@
 create_table "comics", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
   t.string :title, null: false
   t.string :copyright_title, null: false
-  t.string :author, null: false
+  t.text :author, size: :medium, null: false
   t.integer :publisher_id
   t.integer :year_start
   t.integer :year_end

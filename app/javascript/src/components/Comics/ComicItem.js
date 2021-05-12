@@ -6,6 +6,10 @@ const AuthorLink = styled.div`
   font-size: 80%;
   font-weight: 400;
   text-transform: uppercase;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 
   a {
     color: #131c2e;
@@ -35,7 +39,6 @@ const ComicCard = styled.li`
     width: 100%;
 
     .status {
-      --color: #f44336;
       background: var(--color);
       position: absolute;
       top: 10px;
@@ -77,6 +80,10 @@ const ComicCard = styled.li`
 
       &.orange {
         --color: #ff9800;
+      }
+
+      &.red {
+        --color: #f44336;
       }
     }
 
@@ -164,10 +171,25 @@ const ComicItem = (props) => {
   };
 
   const status = () => {
-    if (!comic.ongoing && comic.volumes_collected === comic.volumes_total)
+    if (
+      comic.original_status == "finished" &&
+      comic.volumes_collected === comic.volumes_total
+    )
       return "green";
     if (comic.volumes_collected == 0) return "red";
-    if (comic.ongoing) return "yellow";
+    if (
+      (comic.publishing_status == "hiatus" ||
+        comic.publishing_status == "dropped") &&
+      comic.volumes_collected > 0
+    )
+      return "orange";
+    if (
+      comic.publishing_status != "hiatus" &&
+      comic.publishing_status != "finished" &&
+      comic.publishing_status != "dropped" &&
+      comic.volumes_collected > 0
+    )
+      return "yellow";
     return "orange";
   };
 
@@ -185,7 +207,7 @@ const ComicItem = (props) => {
 
         <div className={"status " + status()}>
           {comic.volumes_collected}/{comic.volumes_total}
-          {comic.ongoing && "+"}
+          {comic.original_status == "running" && "+"}
         </div>
 
         <div className="detail">

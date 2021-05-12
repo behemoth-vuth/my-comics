@@ -6,7 +6,8 @@ class UpcomingSerializer < ActiveModel::Serializer
              :grabbed_at,
              :skipped_at,
              :comic_id,
-             :official
+             :official,
+             :cover
 
   belongs_to :comic
 end

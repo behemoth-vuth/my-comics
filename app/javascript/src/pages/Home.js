@@ -160,6 +160,7 @@ const Home = () => {
   const [editingComic, setEditingComic] = useState({});
   const [status, setStatus] = useState(0);
   const [upcomingDisplayed, setUpcomingDisplayed] = useState(false);
+  const [stateText, setStatusText] = useState("All");
 
   useEffect(() => {
     search();
@@ -181,26 +182,31 @@ const Home = () => {
   const handleConditions = () => {
     switch (Number(status)) {
       case 1:
+        setStatusText("Finished");
         return {
           title_or_copyright_title_or_author_i_cont: query,
           state: "finished",
         };
       case 2:
+        setStatusText("Publishing");
         return {
           title_or_copyright_title_or_author_i_cont: query,
-          state: "collecting",
+          state: "running",
         };
       case 3:
+        setStatusText("Paused (> 3 months)");
         return {
           title_or_copyright_title_or_author_i_cont: query,
-          state: "ongoing",
+          state: "pausing",
         };
       case 4:
+        setStatusText("Upcoming");
         return {
           title_or_copyright_title_or_author_i_cont: query,
           state: "following",
         };
       default:
+        setStatusText("All");
         return {
           title_or_copyright_title_or_author_i_cont: query,
           volumes_collected_not_eq: 0,
@@ -260,21 +266,21 @@ const Home = () => {
             <input
               type="radio"
               className="custom-control-input"
-              id="orange"
+              id="yellow"
               name="filter"
               onChange={() => setStatus(2)}
             />
-            <label className="custom-control-label" htmlFor="orange"></label>
+            <label className="custom-control-label" htmlFor="yellow"></label>
           </CheckBox>
           <CheckBox className="custom-control custom-radio">
             <input
               type="radio"
               className="custom-control-input"
-              id="yellow"
+              id="orange"
               name="filter"
               onChange={() => setStatus(3)}
             />
-            <label className="custom-control-label" htmlFor="yellow"></label>
+            <label className="custom-control-label" htmlFor="orange"></label>
           </CheckBox>
           <CheckBox className="custom-control custom-radio">
             <input
@@ -287,6 +293,8 @@ const Home = () => {
             <label className="custom-control-label" htmlFor="red"></label>
           </CheckBox>
         </div>
+
+        <div className="text-center text-white mb-4">{stateText}</div>
 
         <SearchInput>
           <input
@@ -332,7 +340,7 @@ const Home = () => {
         <UpcomingModal
           comic={editingComic}
           onClose={() => setUpcomingDisplayed(false)}
-          onSave={() => window.location.href="/upcoming"}
+          onSave={() => (window.location.href = "/upcoming")}
         ></UpcomingModal>
       )}
     </Fragment>

@@ -27,14 +27,12 @@ module Api
 
     def show
       render json: Comic.find(params[:id]),
-             include: %i[publisher upcomings]
+             include: %i[publisher upcomings covers]
     end
 
     def update
       @comic = Comic.find(params[:id])
-      updated_now = params[:volumes_collected].to_i > @comic.volumes_collected || params[:updated_now] == 'true'
       @comic.update!(comic_params)
-      @comic.update!(last_saved_at: Time.now) if updated_now
       render json: :ok
     rescue StandardError => e
       render json: e.message, status: :unprocessable_entity

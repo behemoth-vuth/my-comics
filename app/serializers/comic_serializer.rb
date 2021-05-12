@@ -20,6 +20,7 @@ class ComicSerializer < ActiveModel::Serializer
 
   belongs_to :publisher
   has_many :upcomings
+  has_many :covers
 
   def meta
     object.meta || {}

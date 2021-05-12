@@ -2,6 +2,46 @@ import React, { useEffect, useState, Fragment } from "react";
 import axios from "axios";
 import UpcomingModal from "@/components/Upcoming/UpcomingModal";
 import ComicModal from "@/components/Comics/ComicModal";
+import CoverUploadModal from "@/components/Comics/CoverUploadModal";
+import CoverBatchUploadModal from "@/components/Comics/CoverBatchUploadModal";
+import styled from "styled-components";
+
+const CoverList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+
+  .cover-item {
+    width: 200px;
+    position: relative;
+
+    &:hover span {
+      display: flex;
+    }
+
+    span {
+      text-decoration: none !important;
+      font-size: 20px;
+      color: white;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 6px;
+      width: 30px;
+      height: 30px;
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      cursor: pointer;
+    }
+
+    img {
+      width: 100%;
+    }
+  }
+`;
 
 const Author = (props) => {
   const [comic, setComic] = useState({});
@@ -9,6 +49,8 @@ const Author = (props) => {
   const [showUpcomingModal, setShowUpcomingModal] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [lastDate, setLastDate] = useState("");
+  const [showCoverModal, setShowCoverModal] = useState(false);
+  const [showBatchCoverModal, setShowBatchCoverModal] = useState(false);
 
   useEffect(() => {
     getComic();
@@ -29,6 +71,15 @@ const Author = (props) => {
   async function grabVolume(item) {
     try {
       await axios.post("/api/upcoming/" + item.id + "/grab");
+      getComic();
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  async function deleteCover(id) {
+    try {
+      await axios.delete("/api/covers/" + id);
       getComic();
     } catch (e) {
       alert(e.message);
@@ -120,7 +171,7 @@ const Author = (props) => {
           </div>
         </div>
 
-        <div className="row text-white">
+        <div className="row text-white mb-4">
           <div className="col-12">
             <h3>History</h3>
             <table className="table text-white">
@@ -188,6 +239,39 @@ const Author = (props) => {
             </table>
           </div>
         </div>
+
+        <div className="row text-white mb-5">
+          <div className="col-12">
+            <h3>Covers</h3>
+            <CoverList>
+              {comic.covers?.map((cover) => (
+                <div className="cover-item" key={cover.id}>
+                  <span onClick={() => deleteCover(cover.id)}>&times;</span>
+                  <a href={cover.image.url} target="_blank" className="w-100">
+                    <img src={cover.image.url} />
+                  </a>
+                </div>
+              ))}
+
+              <div>
+                <button
+                  type="button"
+                  className="btn btn-success btn-block"
+                  onClick={() => setShowCoverModal(true)}
+                >
+                  Upload
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary btn-block"
+                  onClick={() => setShowBatchCoverModal(true)}
+                >
+                  Batch Upload
+                </button>
+              </div>
+            </CoverList>
+          </div>
+        </div>
       </div>
 
       {showUpcomingModal && (
@@ -200,7 +284,7 @@ const Author = (props) => {
           schedules={comic.upcomings}
           onClose={() => setShowUpcomingModal(false)}
           onSave={(date) => {
-            setLastDate(date)
+            setLastDate(date);
             getComic();
           }}
           onDestroy={() => getComic()}
@@ -217,6 +301,22 @@ const Author = (props) => {
             setShowUpcomingModal(true);
           }}
         ></ComicModal>
+      )}
+
+      {showCoverModal && (
+        <CoverUploadModal
+          comic={comic}
+          onSave={getComic}
+          onClose={() => setShowCoverModal(false)}
+        ></CoverUploadModal>
+      )}
+
+      {showBatchCoverModal && (
+        <CoverBatchUploadModal
+          comic={comic}
+          onSave={getComic}
+          onClose={() => setShowBatchCoverModal(false)}
+        ></CoverBatchUploadModal>
       )}
     </Fragment>
   );
